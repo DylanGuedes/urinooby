@@ -22,12 +22,15 @@ void connect(int a, int b)
 int bfs(int source, int destiny)
 {
   queue<ii> myq;
-  visited[0] = 1;
+  visited[source] = 1;
 
-  myq.push(pair<int, int>(source, 0));
+  myq.push(ii(source, 0));
+  int v1 = myq.front().first;
+
   while (not myq.empty()) {
-    int v1 = myq.front().first;
+    myq.front().first;
     int v2 = myq.front().second;
+    v1 = myq.front().first;
     myq.pop();
 
     if (v1 == destiny) {
@@ -36,13 +39,13 @@ int bfs(int source, int destiny)
 
     for (auto it : friends[v1]) {
       if (visited[it] == 0) {
-        myq.push(pair<int, int>(it, v2+1));
+        myq.push(ii(it, v2+1));
         visited[v1] = 1;
       }
     }
   }
 
-  return -1;
+  return v1;
 }
 
 int main()
@@ -58,20 +61,18 @@ int main()
 
     for (int i=0; i < l; ++i) {
       cin >> aux;
-      myv.push_back(aux-1);
+      myv.push_back(aux);
     }
 
     int mylength = myv.size();
     for (int z=0; z < mylength; ++z) {
       for (int z2=z; z2 < mylength; ++z2) {
-        if (z != z2) {
-          connect(myv[z], myv[z2]);
-        }
+        connect(myv[z], myv[z2]);
       }
     }
   }
 
-  cout << bfs(0, n-1) << endl;
+  cout << bfs(1, n) << endl;
 
   return 0;
 }
