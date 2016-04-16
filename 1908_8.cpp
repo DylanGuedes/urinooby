@@ -84,30 +84,19 @@ int main()
 
     for (int w=0; w < l; ++w) {
       cin >> auxI;
-      // cout << "myv push_back(" << auxI-1 << ")" << endl;
       myv.push_back(auxI-1);
     }
-    // cout << "myv:" << endl;
-    // for (auto it : myv) {
-    //   cout << it << " ";
-    // }
-    // cout << "\n";
-    // //
-    // cout << "myv.size:" << myv.size() << endl;
 
     for (int w=0; w < myv.size(); ++w) {
       for (int w2=w; w2 < myv.size(); ++w2) {
         if (w != w2) {
-          // cout << w << " != " << w2 << endl;
-          // cout << "find(friends[" << myv[w] << "].begin()" << endl;
-          // cout << "friends[" << myv[w] << "].push_back(" << myv[w2] <<")" << endl;
           connect(myv[w], myv[w2]);
         }
       }
     }
   }
 
-  print_grid(n);
+  // print_grid(n);
 
   int ans = 0;
   ans = bfs(0, n-1);
