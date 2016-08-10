@@ -1,35 +1,31 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <cstring>
 
 using namespace std;
 
-vector<long long int> coins;
-vector<long long int> solutions;
+vector<int> coins;
+int dp[1000000];
 
-int coin_change(long long int m, long long int current, long long int total_cubes, long long int coin_idx)
+#define FOR(i, j, k)for (int i=j;i<k;++i)
+
+int troco(int idx)
 {
-  queue<pair<int, long long int> > myq;
+    if (idx == 0)
+        return 0;
+    if (idx < 0)
+        return 0xffffff;
+    if (dp[idx] != -1)
+        return dp[idx];
 
-  myq.push(pair<int, long long int>(1, coins.back()));
-
-  while (not queue.empty()) {
-    int aux = myq.front(); myq.pop();
-    if (aux.second == m) {
-      solutions.push_back(aux.first);
+    dp[idx] = 0xffffff;
+    for (auto it : coins) {
+        dp[idx] = min(dp[idx], troco(idx-it));
     }
 
-    // nao pego o ultimo cubo
-    queue.push(pair<int, int>(0, 0));
-
-    int length =  coins.size();
-    for (int i=0; i < length; ++i) {
-      // pego o cubo i e o inicial
-      if (coins[i]+aux.second < m) {
-        queue.push(pair<int, int>(aux.first+1, coins[i]+aux.second));
-      }
-    }
-  }
+    dp[idx] += 1;
+    return dp[idx];
 }
 
 int main()
@@ -41,16 +37,31 @@ int main()
   cin >> t;
   for (int w=0; w < t; ++w) {
     coins.clear();
-    cin >> n >> m;
+    scanf("%d", &n);
+    scanf("%d", &m);
+
     for (int i=0; i < n; ++i) {
-      cin >> aux_i;
+        scanf("%d", &aux_i);
       coins.push_back(aux_i);
     }
 
-    sort(coins.begin(), coins.end());
+    // sort(coins.begin(), coins.end());
+    memset(dp, -1, sizeof dp);
 
-    cout << "size: " << coins.size() << endl;
-    cout << coin_change(m,0, 0, coins.size()-1) << endl;
+    dp[0] = 0;
+    FOR(i, 1, m+1) {
+        dp[i] = 0xffffff;
+        for (auto it : coins) {
+            if (i-it >= 0) {
+                dp[i] = min(dp[i], dp[i-it]);
+            }
+        }
+
+        dp[i] += 1;
+    }
+    printf("%d\n", dp[m]);
+
+    // printf("%d\n", troco(m));
   }
   return 0;
 }

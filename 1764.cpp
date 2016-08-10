@@ -20,7 +20,7 @@ int union_find(int x)
     if (father[x] == x)
         return x;
     else
-        return union_find(father[x]);
+        return father[x] = union_find(father[x]);
 }
 
 void make_union(int n1, int n2)
