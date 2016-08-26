@@ -11,42 +11,6 @@ int n, p, m;
 int v[2020];
 int c[2020];
 
-int solve(int idx, int tempo)
-{
-    if (idx == n+1)
-        return 0;
-
-    if (dp[idx][tempo] != -1)
-        return dp[idx][tempo];
-
-    dp[idx][tempo] = solve(idx+1, 0) - v[tempo] + p;
-    if (tempo != m) {
-        dp[idx][tempo] = min(dp[idx][tempo], solve(idx+1, tempo+1) + c[tempo]);
-    }
-
-    return dp[idx][tempo];
-}
-
-// int compute_min_cost(void) {
-//     for(int j = n; j > 0; --j) {
-//         dp[j][m] = dp[j + 1][1] + p + cost[0] - value[m];
-//         son[j][m] = ii(j + 1, 1);
-//         for(int k = m - 1; k > 0; --k) {
-//             int maintenance = dp[j + 1][k + 1] + cost[k];
-//             int sale = dp[j + 1][1] + p + cost[0] - value[k];
-//             if(maintenance >= sale) {
-//                 son[j][k] = ii(j + 1, 1);
-//             } else {
-//                 son[j][k] = ii(j + 1, k + 1);
-//             }
-//
-//             dp[j][k] = min(maintenance, sale);
-//         }
-//     }
-//
-//     return dp[1][i];
-// }
-
 int main()
 {
     int ini;
@@ -59,20 +23,18 @@ int main()
             scanf("%d", &v[i]);
         }
 
-        memset(dp, -1, sizeof dp);
+        memset(dp, 0, sizeof dp);
 
-        // solve(0, ini);
-        // FOR(i, 0, m) {
-        //     dp[n][i] = min(c[i], p-v[i]);
-        // }
+        for(int i=n;i>=0;i--) {
+            FOR(j, 1, m+1) {
+                dp[i][j] = dp[i+1][1]-v[j-1]+p+c[0];
+                if (j == m)
+                    continue;
+                dp[i][j] = min(dp[i][j], dp[i+1][j+1]+c[j]);
+            }
+        }
 
-        // for (int i=n; i>=0; i--) {
-        //     FOR(j, 0, m) {
-        //         dp[i][j] = min(p-v[j]+dp[i+1][0], c[j]+dp[i+1][j+1]);
-        //     }
-        // }
-
-        printf("%d\n", solve(1, ini));
+        cout << dp[1][ini] << "\n";
         printf("DP:\n");
         FOR(i, 0, n+1) {
             FOR(j, 0, m+1) {

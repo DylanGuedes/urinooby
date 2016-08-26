@@ -17,7 +17,7 @@ int main()
 {
     int n;
     cin >> n;
-    int maxtempo = -0xffffff;
+    int maxtempo = -1<<30;
     FOR(i, 0, n) {
         scanf("%d", &y[i]);
         scanf("%d", &x[i]);
@@ -26,49 +26,30 @@ int main()
     }
 
     memset(dp, 0, sizeof dp);
-    for(int idx=n-1; idx>=0; idx--) {
-        if (t[idx] == maxtempo)
-            dp[t[idx]][x[idx]][y[idx]] = 1;
+
+    FOR(i, 0, n) {
+        if (t[i]!=maxtempo)
+            continue;
+        dp[t[i]][y[i]][x[i]] += 1;
     }
 
-    // printf("DP:\n");
-    // FOR(i, 0, t[n-1]+1) {
-    //     FOR(j, 0, 21) {
-    //         FOR(k, 0, 21) {
-    //             printf("[%d][%d][%d] = %d\t", i, j, k, dp[i][j][k]);
-    //         }
-    //         printf("\n");
-    //     }
-    //     printf("\n");
-    // }
-    for(int idx=maxtempo-1; idx>=0; idx--) {
-        FOR(i, 0, 21) {
-            FOR(j, 0, 21) {
-                vector<ii> myv { make_pair(i+1, j), make_pair(i-1, j), make_pair(i, j-1), make_pair(i, j+1), make_pair(i, j) };
+    for (int i=maxtempo-1;i>=0;i--) {
+        FOR(k, 0, 21) {
+            FOR(l, 0, 21) {
+                vector<ii> myv { ii(k+1, l), ii(k, l+1), ii(k-1, l), ii(k, l-1), ii(k, l) };
                 for (auto it : myv) {
-                    if (it.first >= 0 && it.first <= 20 && it.second >= 0 && it.second <= 20) {
-                        dp[idx][i][j] = max(dp[idx][i][j], dp[idx+1][it.first][it.second]);
-                    }
+                    if (it.first < 0 || it.second < 0 || it.first > 20 || it.second > 20)
+                        continue;
+                    dp[i][k][l] = max(dp[i][k][l], dp[i+1][it.second][it.first]);
                 }
-
-                for(int maca=n-1; maca>=0; maca--) {
-                    if (t[maca] == idx && x[maca] == i && y[maca] == j) {
-                        dp[idx][i][j] += 1;
+                for (int j=0;j<n;++j) {
+                    if (t[j]==i && x[j]==l && y[j]==k) {
+                        dp[i][k][l]+=1;
                     }
                 }
             }
         }
     }
-
-    // FOR(i, 0, t[n-1]+1) {
-    //     FOR(j, 0, 21) {
-    //         FOR(k, 0, 21) {
-    //             printf("[%d][%d][%d] = %d\t", i, j, k, dp[i][j][k]);
-    //         }
-    //         printf("\n");
-    //     }
-    //     printf("\n");
-    // }
 
     printf("%d\n", dp[0][6][6]);
     return 0;
