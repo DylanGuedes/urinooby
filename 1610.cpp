@@ -1,69 +1,65 @@
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <set>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 #define FOR(i, j, k)for(int i=j;i<k;++i)
 
-vector<int> graph[10020];
-bool visited[10020];
-bool impossible;
-set<int> mys;
+vector<int> graph[10005];
+int instack[10005];
+int visited[10005];
+#define pb(i) push_back(i);
 
-void dfs(int idx)
+bool dfs(int idx)
 {
-    if (mys.count(idx) > 0) {
-        impossible = true;
-        return;
-    }
+        if (not *(visited+idx)) {
+                *(visited+idx) = 1;
+                *(instack+idx) = 1;
+                bool ans = 0;
+                for (auto it : *(graph+idx)) {
+                        if (*(instack+it))
+                                return true;
+                        else {
+                                ans = max(ans, dfs(it));
+                        }
+                }
 
-    visited[idx] = true;
-    for (auto it : graph[idx]) {
-        if (visited[it] == false) {
-            dfs(it);
-        } else {
-            impossible = true;
-            return;
+                *(instack+idx) = false;
+                return ans;
         }
-    }
-    mys.insert(idx);
+
+        return false;
 }
 
 int main()
 {
-    int t, n, m, a, b;
-    scanf("%d", &t);
-    FOR(z, 0, t) {
-        impossible = false;
-        scanf("%d", &n);
-        scanf("%d", &m);
-        mys.clear();
-        FOR(i, 0, n+2) {
-            graph[i].clear();
+        ios::sync_with_stdio(false);
+        int t, n, m, a, b;
+        cin >> t;
+
+        while(t--) {
+                cin >> n >> m;
+                FOR(i, 0, n+5)
+                        (graph+i)->clear();
+
+                FOR(i, 0, m) {
+                        cin >> a >> b;
+                        (graph+a-1)->pb(b-1);
+                }
+
+                memset(visited, false, sizeof visited);
+                memset(instack, false, sizeof instack);
+
+                bool ans = 0;
+                FOR(i, 0, n) {
+                        if (not *(visited+i)) {
+                                ans = max(dfs(i), ans);
+                        }
+                }
+                if (ans)
+                        cout << "SIM\n";
+                else
+                        cout << "NAO\n";
         }
 
-        FOR(i, 0, m) {
-            scanf("%d", &a);
-            scanf("%d", &b);
-            graph[a].push_back(b);
-        }
-
-        memset(visited, false, sizeof visited);
-        FOR(i, 1, m+1) {
-            if (impossible) {
-                break;
-            }
-            if (visited[i] == false) {
-                dfs(i);
-            }
-        }
-
-        if (impossible)
-            printf("SIM\n");
-        else
-            printf("NAO\n");
-    }
-    return 0;
+        return 0;
 }

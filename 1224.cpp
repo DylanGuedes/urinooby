@@ -1,52 +1,28 @@
-#include <iostream>
-#include <cstring>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-int val[10020];
-int dp[10000][10000][2];
+int arr[10020];
+int dp[10020];
+int s[10020][10020];
 
-#define FOR(i, j, k)for(int i=j;i<k;++i)
-
-// int solve(int idx)
-// {
-//     memset(dp, -1, sizeof dp);
-//
-//     FOR(i, 0, n-2) {
-//         int melhor = max(v[i], v[i+2]);
-//         int pior = min(v[i], v[i+2]);
-//         int meio = v[i+1];
-//         dp[idx] = max(pior+meio, melhor+min(pior, meio));
-//     }
-//
-//
-// }
-
-int solve(int left, int right, short alberto)
-{
-    if (left == right) {
-        return val[left];
-    }
-
-    if (dp[left][right][alberto] != -1)
-        return dp[left][right][alberto];
-
-    if (alberto) {
-        return dp[left][right][alberto] = max(solve(left+1, right, 0)+val[left], solve(left, right-1, 0)+val[right]);
-    } else {
-        return dp[left][right][alberto] = min(solve(left+1, right, 1)+val[left], solve(left, right-1, 1)+val[right]);
-    }
-}
+#define repi(i, j, k)for(int i=j;i<k;++i)
+#define repd(i, j)for(int i=j;i>=0;i--)
 
 int main()
 {
-    int n;
-    while (cin >> n) {
-        FOR(i, 0, n) {
-            scanf("%d", &val[i]);
+        ios::sync_with_stdio(false);
+        int n;
+        while (cin >> n) {
+                repi(i, 0, n)
+                        cin >> dp[i];
+
+                repi(i, 0, n) {
+                        repd(j, n-1) {
+                                dp[i][j] = max(dp[i], d[j]);
+                        }
+                }
+                cout << s[0][n-1] << "\n";
         }
-        memset(dp, -1, sizeof dp);
-        printf("%d\n", solve(0, n-1, 1));
-    }
-    return 0;
+        return 0;
 }
